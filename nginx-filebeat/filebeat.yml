@@ -1,0 +1,16 @@
+output:
+  logstash:
+    enabled: true
+    hosts:
+      - logstash:5044
+
+filebeat:
+  prospectors:
+    -
+      paths:
+        - /var/log/nginx/acces.log
+      document_type: nginx-access
+    -
+      paths:
+        - /var/log/nginx/error.log
+      document_type: nginx-error

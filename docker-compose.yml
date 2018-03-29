@@ -1,0 +1,41 @@
+version: '2'
+services:
+
+  nginx-filebeat:
+      build: ./nginx-filebeat
+      ports:
+         - "5044:5044"
+         - "80:80"
+
+
+  logstash:
+      build: ./logstash
+      hostname: logstash
+      ports:
+         - "6555:6555"
+      links:
+         - nginx-filebeat
+         - elasticsearch
+
+
+  elasticsearch:
+      image: "docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3"
+      hostname: elasticsearch
+      ports:
+         - "9200:9200"
+      environment:
+         - transport.host=127.0.0.1
+         - discovery.type=single-node
+                                 
+
+                                                       
+  kibana:
+      image: "docker.elastic.co/kibana/kibana-oss:6.2.3"
+      hostname: kibana
+      links:
+         - elasticsearch
+      ports:
+         - "5601:5601"
+      environment:      
+         - ELASTICSEARCH_URL=http://elasticsearch:9200
+ 
